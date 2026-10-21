@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RegaFonts — فۆنتەکانی ڕێگالابس (Rega Type, Rega Aso, Rega Payam)</title>
+<style>
+  /* === Rega Type @font-face === */
+  @font-face {
+    font-family: 'Rega Type';
+    src: url('./fonts/woff2/Rega_Type-Regular.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Type-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Rega Type';
+    src: url('./fonts/woff2/Rega_Type-Bold.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Type-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* === Rega Payam @font-face === */
+  @font-face {
+    font-family: 'Rega Payam';
+    src: url('./fonts/woff2/Rega_Payam-Regular.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Payam-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Rega Payam';
+    src: url('./fonts/woff2/Rega_Payam-Bold.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Payam-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* === Rega Aso @font-face === */
+  @font-face {
+    font-family: 'Rega Aso';
+    src: url('./fonts/woff2/Rega_Aso-Light.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Aso-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Rega Aso';
+    src: url('./fonts/woff2/Rega_Aso-Regular.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Aso-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Rega Aso';
+    src: url('./fonts/woff2/Rega_Aso-Bold.woff2') format('woff2'),
+         url('./fonts/ttf/Rega_Aso-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --bg-main: #0b0f19;
+    --bg-card: #131b2e;
+    --bg-elevated: #1a243c;
+    --border: #233150;
+    --border-accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-blue: #0284c7;
+    --accent-cyan: #38bdf8;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-purple: #a855f7;
+    --accent-rose: #f43f5e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Rega Type', system-ui, -apple-system, sans-serif;
+    line-height: 1.8;
+    padding: 24px 20px 80px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #131b2e 0%, #172554 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .brand-area h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .badge-rega {
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-area p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-top: 6px;
+  }
+
+  .stats-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: rgba(11, 15, 25, 0.7);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    display: block;
+  }
+
+  .stat-lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Sticky Controls Bar */
+  .toolbar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 15px;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-inline-end: 6px;
+  }
+
+  .btn-tab {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .btn-tab:hover {
+    color: #ffffff;
+    border-color: var(--accent-cyan);
+  }
+
+  .btn-tab.active {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: #ffffff;
+    border-color: #38bdf8;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  }
+
+  .slider-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 10px;
+  }
+
+  .slider-control label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .slider-control input[type="range"] {
+    cursor: pointer;
+    accent-color: var(--accent-cyan);
+    width: 120px;
+  }
+
+  .slider-control span {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    min-width: 42px;
+  }
+
+  /* Live Tester */
+  .interactive-tester {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 30px;
+  }
+
+  .tester-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .tester-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .presets-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn-preset {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+  }
+
+  .btn-preset:hover {
+    color: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+  }
+
+  .test-input {
+    width: 100%;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 18px;
+    line-height: 1.8;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .test-input:focus {
+    border-color: var(--accent-cyan);
+  }
+
+  /* Cards Grid */
+  .fonts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .font-family-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .font-family-card:hover {
+    border-color: #3b82f6;
+  }
+
+  .card-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    gap: 12px;
+  }
+
+  .font-meta h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .font-meta p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .font-tags {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .tag-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+  .tag-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+  .tag-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+  .tag-rose { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+  /* Specimen blocks */
+  .specimen-section {
+    margin-bottom: 24px;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .specimen-box {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    line-height: 1.8;
+    color: #f1f5f9;
+    word-break: break-word;
+    transition: font-size 0.15s ease;
+  }
+
+  .specimen-box.bold-weight {
+    font-weight: 700;
+    border-inline-start: 4px solid var(--accent-cyan);
+  }
+
+  .specimen-box.regular-weight {
+    font-weight: 400;
+    border-inline-start: 4px solid var(--accent-emerald);
+  }
+
+  /* Alphabet & Special Glyphs */
+  .glyphs-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .glyph-item {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    padding: 12px 6px;
+  }
+
+  .glyph-char {
+    font-size: 28px;
+    color: var(--accent-amber);
+    display: block;
+    line-height: 1.2;
+  }
+
+  .glyph-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-family: sans-serif;
+  }
+
+  /* Font Info Footer */
+  .info-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .info-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .info-table td:first-child {
+    color: var(--text-muted);
+    width: 30%;
+  }
+
+  .info-table td:last-child {
+    color: var(--text-primary);
+    font-family: monospace;
+    direction: ltr;
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 16px 12px; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .slider-control { justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- Header -->
+  <header>
+    <div class="brand-area">
+      <h1>
+        فۆنتەکانی ڕێگا (RegaFonts)
+        <span class="badge-rega">RegaLabs Official</span>
+      </h1>
+      <p>تایپفەیسە فەرمییەکانی ڕێگالابس: ڕێگا تایپ، ڕێگا ئاسۆ و ڕێگا پەیام، بە پشتگیری تەواوی کوردی و لاتینی</p>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <span class="stat-val">٣</span>
+        <span class="stat-lbl">خێزانی تایبەت</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-val">٧</span>
+        <span class="stat-lbl">کێشی فەرمی</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-val">REGA</span>
+        <span class="stat-lbl">Vendor ID</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Controls Bar -->
+  <div class="toolbar">
+    <div class="filter-group">
+      <span class="group-title">خێزان:</span>
+      <button class="btn-tab active" data-family="all">هەموو فۆنتەکان</button>
+      <button class="btn-tab" data-family="rega-type">Rega Type (تایپ)</button>
+      <button class="btn-tab" data-family="rega-payam">Rega Payam (پەیام)</button>
+      <button class="btn-tab" data-family="rega-aso">Rega Aso (ئاسۆ)</button>
+    </div>
+
+    <div class="filter-group">
+      <div class="slider-control">
+        <label for="sizeSlider">قەبارە:</label>
+        <input type="range" id="sizeSlider" min="14" max="52" value="22">
+        <span id="sizeVal">22px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Live Tester -->
+  <div class="interactive-tester">
+    <div class="tester-header">
+      <h2>تاقیکردنەوەی دەقی دڵخواز (دەستکاری دەکرێت)</h2>
+      <div class="presets-list">
+        <button class="btn-preset" data-text="دار بە پوازی خۆی نەبێ ناقەڵشێ. چی بچێنی ئەوە ئەدرویتەوە. سوار هەتا نەگلێ نابێ بە سوار. چەم بێ چەقەڵ نابێ.">پەندی پێشینان</button>
+        <button class="btn-preset" data-text="لە ئاسمانی خەیاڵاندا بازی بێپەڕوا، لە زەویوزاری نوکتەزانیدا سکەیەکی خۆشڕەوا. سەردەفتەری خۆشییەکەری ئەدیبان، بادەنۆشی خانەدانی هۆنەران.">سەردێڕی هەواڵ</button>
+        <button class="btn-preset" data-text="ڵ ڕ ێ ۆ وو ژ گ چ پ ڤ ھ ە — ٠١٢٣٤٥٦٧٨٩ — ABCDEFGHIJKLMNOPQRSTUVWXYZ">پیتە کوردییەکان و لاتینی</button>
+      </div>
+    </div>
+    <textarea id="customInput" class="test-input" placeholder="لێرە بنووسە بۆ تاقیکردنەوەی خێرای دەقەکە لەسەر هەموو فۆنتەکان...">لە ئاسمانی خەیاڵاندا بازی بێپەڕوا، لە زەویوزاری نوکتەزانیدا سکەیەکی خۆشڕەوا. سەردەفتەری خۆشییەکەری ئەدیبان، بادەنۆشی خانەدانی هۆنەران.</textarea>
+  </div>
+
+  <!-- Fonts Grid Showcase -->
+  <div class="fonts-grid" id="fontsGrid">
+
+    <!-- 1. REGA TYPE -->
+    <div class="font-family-card" data-card="rega-type">
+      <div class="card-top">
+        <div class="font-meta">
+          <h3>Rega Type (ڕێگا تایپ)</h3>
+          <p>فۆنتی مۆنۆلاینی ئەندازەیی ستاندارد بۆ دەق، ماڵپەڕ، سیستەم و خوێندنەوەی بەردەوام</p>
+        </div>
+        <div class="font-tags">
+          <span class="tag tag-blue">Text & Interface</span>
+          <span class="tag tag-blue">Regular (400) & Bold (700)</span>
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی تۆخ — Bold (700)</span>
+          <span>font-family: 'Rega Type'; font-weight: 700;</span>
+        </div>
+        <div class="specimen-box bold-weight sync-text" style="font-family: 'Rega Type';">
+          لە ئاسمانی خەیاڵاندا بازی بێپەڕوا، لە زەویوزاری نوکتەزانیدا سکەیەکی خۆشڕەوا. سەردەفتەری خۆشییەکەری ئەدیبان، بادەنۆشی خانەدانی هۆنەران.
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی ئاسایی — Regular (400)</span>
+          <span>font-family: 'Rega Type'; font-weight: 400;</span>
+        </div>
+        <div class="specimen-box regular-weight sync-text" style="font-family: 'Rega Type';">
+          دار بە پوازی خۆی نەبێ ناقەڵشێ. چی بچێنی ئەوە ئەدرویتەوە. سوار هەتا نەگلێ نابێ بە سوار. چەم بێ چەقەڵ نابێ. قسە کەوتە زاری ئەکەوێتە شاری. نالی و مەحوی و گۆران. زیندەوەرزان، هەڕەش، هەڕزان.
+        </div>
+      </div>
+
+      <div class="glyphs-showcase" style="font-family: 'Rega Type';">
+        <div class="glyph-item"><span class="glyph-char">ڵ</span><span class="glyph-sub">LamV</span></div>
+        <div class="glyph-item"><span class="glyph-char">ڕ</span><span class="glyph-sub">RehV</span></div>
+        <div class="glyph-item"><span class="glyph-char">ێ</span><span class="glyph-sub">Yeh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ۆ</span><span class="glyph-sub">WawV</span></div>
+        <div class="glyph-item"><span class="glyph-char">گ</span><span class="glyph-sub">Gaf</span></div>
+        <div class="glyph-item"><span class="glyph-char">چ</span><span class="glyph-sub">Tcheh</span></div>
+        <div class="glyph-item"><span class="glyph-char">پ</span><span class="glyph-sub">Peh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ژ</span><span class="glyph-sub">Zhe</span></div>
+        <div class="glyph-item"><span class="glyph-char">ڤ</span><span class="glyph-sub">Veh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ھ</span><span class="glyph-sub">Heh</span></div>
+      </div>
+
+      <table class="info-table">
+        <tr><td>PostScript Name</td><td>RegaType-Regular / RegaType-Bold</td></tr>
+        <tr><td>Family Name</td><td>Rega Type</td></tr>
+        <tr><td>Vendor ID</td><td>REGA (RegaLabs)</td></tr>
+        <tr><td>Files Available</td><td>Rega_Type-Regular.ttf, .woff2 / Rega_Type-Bold.ttf, .woff2</td></tr>
+      </table>
+    </div>
+
+    <!-- 2. REGA PAYAM -->
+    <div class="font-family-card" data-card="rega-payam">
+      <div class="card-top">
+        <div class="font-meta">
+          <h3>Rega Payam (ڕێگا پەیام)</h3>
+          <p>تایپفەیسی نەرم و قورس بۆ سەردێڕ، پیتەکان بەرز و پڕن و سەری هێڵەکان خڕن. بۆ سەردێڕی هەواڵ، بانەر و پۆستەر</p>
+        </div>
+        <div class="font-tags">
+          <span class="tag tag-amber">Soft Bold Headline</span>
+          <span class="tag tag-blue">Regular (400) & Bold (700)</span>
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی تۆخ — Bold (700)</span>
+          <span>font-family: 'Rega Payam'; font-weight: 700;</span>
+        </div>
+        <div class="specimen-box bold-weight sync-text" style="font-family: 'Rega Payam';">
+          لە ئاسمانی خەیاڵاندا بازی بێپەڕوا، لە زەویوزاری نوکتەزانیدا سکەیەکی خۆشڕەوا. سەردەفتەری خۆشییەکەری ئەدیبان، بادەنۆشی خانەدانی هۆنەران.
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی ئاسایی — Regular (400)</span>
+          <span>font-family: 'Rega Payam'; font-weight: 400;</span>
+        </div>
+        <div class="specimen-box regular-weight sync-text" style="font-family: 'Rega Payam';">
+          دار بە پوازی خۆی نەبێ ناقەڵشێ. چی بچێنی ئەوە ئەدرویتەوە. سوار هەتا نەگلێ نابێ بە سوار. چەم بێ چەقەڵ نابێ. قسە کەوتە زاری ئەکەوێتە شاری. نالی و مەحوی و گۆران. زیندەوەرزان، هەڕەش، هەڕزان.
+        </div>
+      </div>
+
+      <div class="glyphs-showcase" style="font-family: 'Rega Payam';">
+        <div class="glyph-item"><span class="glyph-char">ڵ</span><span class="glyph-sub">LamV</span></div>
+        <div class="glyph-item"><span class="glyph-char">ڕ</span><span class="glyph-sub">RehV</span></div>
+        <div class="glyph-item"><span class="glyph-char">ێ</span><span class="glyph-sub">Yeh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ۆ</span><span class="glyph-sub">WawV</span></div>
+        <div class="glyph-item"><span class="glyph-char">گ</span><span class="glyph-sub">Gaf</span></div>
+        <div class="glyph-item"><span class="glyph-char">چ</span><span class="glyph-sub">Tcheh</span></div>
+        <div class="glyph-item"><span class="glyph-char">پ</span><span class="glyph-sub">Peh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ژ</span><span class="glyph-sub">Zhe</span></div>
+        <div class="glyph-item"><span class="glyph-char">ڤ</span><span class="glyph-sub">Veh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ھ</span><span class="glyph-sub">Heh</span></div>
+      </div>
+
+      <table class="info-table">
+        <tr><td>PostScript Name</td><td>RegaPayam-Regular / RegaPayam-Bold</td></tr>
+        <tr><td>Family Name</td><td>Rega Payam</td></tr>
+        <tr><td>Vendor ID</td><td>REGA (RegaLabs)</td></tr>
+        <tr><td>Files Available</td><td>Rega_Payam-Regular.ttf, .woff2 / Rega_Payam-Bold.ttf, .woff2</td></tr>
+      </table>
+    </div>
+
+    <!-- 3. REGA ASO -->
+    <div class="font-family-card" data-card="rega-aso">
+      <div class="card-top">
+        <div class="font-meta">
+          <h3>Rega Aso (ڕێگا ئاسۆ)</h3>
+          <p>تایپفەیسی نەرم و پان، پیتەکان نزم و پانن و گۆشە و سەری هێڵەکان خڕن. بۆ ئەپ، براند و سۆشیال میدیا</p>
+        </div>
+        <div class="font-tags">
+          <span class="tag tag-purple">Soft &amp; Wide</span>
+          <span class="tag tag-blue">Light (300), Regular (400) & Bold (700)</span>
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی تۆخ — Bold (700)</span>
+          <span>font-family: 'Rega Aso'; font-weight: 700;</span>
+        </div>
+        <div class="specimen-box bold-weight sync-text" style="font-family: 'Rega Aso';">
+          لە ئاسمانی خەیاڵاندا بازی بێپەڕوا، لە زەویوزاری نوکتەزانیدا سکەیەکی خۆشڕەوا. سەردەفتەری خۆشییەکەری ئەدیبان، بادەنۆشی خانەدانی هۆنەران.
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی ئاسایی — Regular (400)</span>
+          <span>font-family: 'Rega Aso'; font-weight: 400;</span>
+        </div>
+        <div class="specimen-box regular-weight sync-text" style="font-family: 'Rega Aso';">
+          دار بە پوازی خۆی نەبێ ناقەڵشێ. چی بچێنی ئەوە ئەدرویتەوە. سوار هەتا نەگلێ نابێ بە سوار. چەم بێ چەقەڵ نابێ. قسە کەوتە زاری ئەکەوێتە شاری. نالی و مەحوی و گۆران. زیندەوەرزان، هەڕەش، هەڕزان.
+        </div>
+      </div>
+
+      <div class="specimen-section">
+        <div class="section-label">
+          <span>کێشی سووک — Light (300)</span>
+          <span>font-family: 'Rega Aso'; font-weight: 300;</span>
+        </div>
+        <div class="specimen-box sync-text" style="font-family: 'Rega Aso'; font-weight: 300;">
+          کوردستان وڵاتێکی جوانە، پڕە لە چیا و ڕووبار و دەشتی سەوز. خەڵکەکەی میواندۆست و بەخێرهاتنیان گەرمە.
+        </div>
+      </div>
+
+      <div class="glyphs-showcase" style="font-family: 'Rega Aso';">
+        <div class="glyph-item"><span class="glyph-char">ڵ</span><span class="glyph-sub">LamV</span></div>
+        <div class="glyph-item"><span class="glyph-char">ڕ</span><span class="glyph-sub">RehV</span></div>
+        <div class="glyph-item"><span class="glyph-char">ێ</span><span class="glyph-sub">Yeh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ۆ</span><span class="glyph-sub">WawV</span></div>
+        <div class="glyph-item"><span class="glyph-char">گ</span><span class="glyph-sub">Gaf</span></div>
+        <div class="glyph-item"><span class="glyph-char">چ</span><span class="glyph-sub">Tcheh</span></div>
+        <div class="glyph-item"><span class="glyph-char">پ</span><span class="glyph-sub">Peh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ژ</span><span class="glyph-sub">Zhe</span></div>
+        <div class="glyph-item"><span class="glyph-char">ڤ</span><span class="glyph-sub">Veh</span></div>
+        <div class="glyph-item"><span class="glyph-char">ھ</span><span class="glyph-sub">Heh</span></div>
+      </div>
+
+      <table class="info-table">
+        <tr><td>PostScript Name</td><td>RegaAso-Light / RegaAso-Regular / RegaAso-Bold</td></tr>
+        <tr><td>Family Name</td><td>Rega Aso</td></tr>
+        <tr><td>Vendor ID</td><td>REGA (RegaLabs)</td></tr>
+        <tr><td>Files Available</td><td>Rega_Aso-Light / Rega_Aso-Regular / Rega_Aso-Bold (.ttf, .woff2)</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Filter tabs
+  const tabs = document.querySelectorAll('.btn-tab');
+  const cards = document.querySelectorAll('.font-family-card');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const family = tab.getAttribute('data-family');
+      cards.forEach(card => {
+        if (family === 'all' || card.getAttribute('data-card') === family) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Size slider
+  const sizeSlider = document.getElementById('sizeSlider');
+  const sizeVal = document.getElementById('sizeVal');
+  const specimenBoxes = document.querySelectorAll('.specimen-box');
+
+  sizeSlider.addEventListener('input', (e) => {
+    const val = e.target.value;
+    sizeVal.textContent = val + 'px';
+    specimenBoxes.forEach(box => {
+      box.style.fontSize = val + 'px';
+    });
+  });
+
+  // Custom text input sync
+  const customInput = document.getElementById('customInput');
+  const syncElements = document.querySelectorAll('.sync-text');
+
+  customInput.addEventListener('input', (e) => {
+    const text = e.target.value.trim() || 'نموونەی دەق بە فۆنتی ڕێگالابس';
+    syncElements.forEach(el => {
+      el.textContent = text;
+    });
+  });
+
+  // Presets
+  const presets = document.querySelectorAll('.btn-preset');
+  presets.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-text');
+      customInput.value = text;
+      syncElements.forEach(el => {
+        el.textContent = text;
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+# If this folder is ever served by Apache (a fonts CDN, the specimen page), never serve
+# dotfiles or dot-folders: /.git would hand out the full source and history.
+RedirectMatch 403 /\.(?!well-known/)
+
+# The build scripts and notes are source, not web content.
+<FilesMatch "\.(py|pyc|md|txt)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # specimen.html keeps its styles and script inline and loads only its own fonts
+    Header always set Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+    AddType font/ttf .ttf
+</IfModule>
