@@ -67,6 +67,14 @@ def ink(font):
 
 # --- vowel marks -----------------------------------------------------------
 
+def _centre(rows, lo, hi):
+    """The middle of the ink between heights lo and hi (None if there is none)."""
+    edges = [r for y, r in rows.items() if y + BAND >= lo and y <= hi]
+    if not edges:
+        return None
+    return (min(e[0] for e in edges) + max(e[1] for e in edges)) / 2
+
+
 def mark_features(data, marks):
     top = [m for m in TOP_MARKS if m in marks]
     bottom = [m for m in BOTTOM_MARKS if m in marks]
@@ -78,11 +86,16 @@ def mark_features(data, marks):
         b = data[m][1]
         lines.append(f'markClass {m} <anchor {round((b[0] + b[2]) / 2)} {round(b[3] + MARK_GAP)}> @BOTTOM;')
     bases = []
-    for name, (_, b, _) in data.items():
+    for name, (_, b, rows) in data.items():
         if b is None or name in marks:
             continue
-        cx = round((b[0] + b[2]) / 2)
-        bases.append(f'    pos base {name} <anchor {cx} {round(b[3])}> mark @TOP <anchor {cx} {round(b[1])}> mark @BOTTOM;')
+        # a mark sits over the top of the letter (its tooth, loop or stem), not over the middle of
+        # its ink box, which a long joining stroke pulls sideways; below, it hangs from the
+        # lowest part when the letter reaches under the line, else under the same spot
+        above = _centre(rows, b[3] - 0.35 * max(b[3], 1), b[3]) or (b[0] + b[2]) / 2
+        below = (_centre(rows, b[1], b[1] * 0.65) if b[1] < -60 else None) or above
+        bases.append(f'    pos base {name} <anchor {round(above)} {round(b[3])}> mark @TOP '
+                     f'<anchor {round(below)} {round(b[1])}> mark @BOTTOM;')
     lines += ['feature mark {', *bases, '} mark;']
     # a vowel written with shadda sits on top of the shadda
     stack = []

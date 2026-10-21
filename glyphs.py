@@ -12,7 +12,9 @@ Each form returns (advance, centre lines, dots). Dots are (x, y) centres;
 the dot shape is chosen at build time. Letters that differ only by dots or
 marks (ب ت ث پ, ح ج چ خ, ...) share one skeleton function.
 """
-from skeleton import (BASE, DOT_GAP, DOT_STACK, EYE, MARK, OV, SOFT, W_H, W_V, Line, ellipse,
+import math
+
+from skeleton import (BASE, DOT_GAP, DOT_STACK, EYE, MARK, OV, SHAPE, SOFT, W_H, W_V, Line, ellipse,
                       ox, oy, poly)
 
 HV, HH = W_V / 2, W_H / 2
@@ -22,7 +24,15 @@ TOOTH = 788 - SOFT       # teeth, reh, the right arm of noon
 TOP = 817 - HH           # centre of the top stroke of ح, ع, ی
 ARM = 520 - SOFT         # the short upturn at the left end of beh, kaf, lam
 DESC = -442 + HH         # centre of a tail that ends level (reh, waw)
-DROP = -442 + SOFT       # end of a tail that ends straight down (meem)
+
+# The family's own shapes (skeleton.FAMILIES 'shape'): how deep the round bowls hang
+BOWL = SHAPE.get('bowl', 1.0)            # ن ق ل س ص ح ع bowls, as a share of the tails' depth
+NOON_LOW = SHAPE.get('noon', -248)       # bottom of ن alone
+YEH_LOW = SHAPE.get('yeh', -395)         # bottom of ی alone
+BOWL_DESC = -442 * BOWL + HH             # centre of a round bowl's bottom
+BOWL_K = (BASE - BOWL_DESC) / (BASE - DESC)   # how much deeper than drawn: dots inside a bowl follow
+DROP = SHAPE.get('meem', -442) + SOFT    # end of a tail that ends straight down (meem)
+TAIL = SHAPE.get('tail', -442) + HH      # centre of the end of the ر و tails
 L = 50 + HV              # centre of a letter's leftmost stroke when nothing joins on the left
 
 DOT_BELOW = -330         # centre of the (upper row of) dots under a letter
@@ -242,14 +252,14 @@ def _noon_bowl(xr, top_r, top_l, bottom, cy=250):
 
 @letter('noon', 0x0646)
 def noon():
-    _, bowl = _noon_bowl(1174 - HV, TOOTH, 560, -248 + HH)
+    _, bowl = _noon_bowl(1174 - HV, TOOTH, 560, NOON_LOW + HH)
     return 1314, [bowl], [(619, 863)]
 
 
 @letter('noon', form='fina')
 def noon_fina():
     xr = 1290
-    _, bowl = _noon_bowl(xr, 686 - SOFT, 520, DESC, cy=200)
+    _, bowl = _noon_bowl(xr, 686 - SOFT, 520, BOWL_DESC, cy=200)
     return 1357, [bowl, entry(1357, xr)], [(629, 730)]
 
 
@@ -258,26 +268,26 @@ def noon_fina():
 @forms('isol', 'fina')
 def _yeh(form):
     if form == 'isol':
+        low, K = YEH_LOW + HH, 0.5523    # the bowl: two quarter ellipses meeting at the bottom
         line = (Line(1469 - SOFT, TOP).to(1100, TOP)
                 .curve(880, TOP, 880, 420, 1080, 330)
                 .curve(1250, 255, 1349, 170, 1349, 0)
-                .curve(1349, -200, 1200, -381 + HH, 950, -381 + HH)
-                .to(500, -381 + HH)
-                .curve(250, -381 + HH, L, -200, L, 50)
+                .curve(1349, low * K, 740 + (1349 - 740) * K, low, 740, low)
+                .curve(740 - (740 - L) * K, low, L, 40 - (40 - low) * K, L, 40)
                 .to(L, 430))
-        return 1559, [line], -381
+        return 1559, [line], YEH_LOW
     # the joining stroke turns down on a round corner into a wide bowl whose left arm
     # rises straight; a short diagonal leans up and back from the joint, like a flag
     xr = 1377
-    bottom = -343 + HH
-    turn, heel = 420, 380    # the round turns into and out of the bottom
+    bottom = YEH_LOW + 52 + HH
+    turn, heel = 560, 500    # the round turns into and out of the bottom
     bowl = (poly([(1504, BASE), (xr, BASE), (xr, 0)], r=120)
             .arc(xr - turn, 0, turn, -bottom, 0, -90)
             .to(L + heel, bottom)
             .arc(L + heel, bottom + heel, heel, heel, -90, -180)
             .to(L, 447 - SOFT))
     flag = Line(xr - 30, BASE + 10).to(910, 420 - SOFT)
-    return 1504, [bowl, flag], -343
+    return 1504, [bowl, flag], YEH_LOW + 52
 
 
 family(_yeh, {
@@ -297,13 +307,13 @@ HAH_X = 954              # the head's right side (alone, at the end)
 @forms('isol', 'init', 'medi', 'fina')
 def _hah(form):
     if form in ('isol', 'fina'):
-        line = (poly([(292, TOP), (HAH_X, TOP), (HAH_X, BASE), (520, BASE)], r=[260, 140])
-                .arc(520, (BASE + DESC - 77) / 2, 383, (BASE - DESC + 77) / 2, 90, 270).to(760, DESC - 77))
+        line = (poly([(292, TOP), (HAH_X, TOP), (HAH_X, BASE), (520, BASE)], r=[340, 170])
+                .arc(520, (BASE + BOWL_DESC - 77) / 2, 383, (BASE - BOWL_DESC + 77) / 2, 90, 270).to(760, BOWL_DESC - 77))
         if form == 'isol':
             return 1234, [line], 'bowl'
         return 1240, [line, entry(1240, HAH_X)], 'bowl'
     xr = 900
-    head = poly([(166, TOP), (xr, TOP), (xr, BASE), (-OV, BASE)], r=[260, 140])
+    head = poly([(166, TOP), (xr, TOP), (xr, BASE), (-OV, BASE)], r=[340, 150])
     if form == 'init':
         return 1107, [head], 'tooth'
     return 1113, [head, entry(1113, xr)], 'tooth'
@@ -314,7 +324,7 @@ def _hah_dots(n, above=False):
         if above:
             return [], dots(n, 600 if where == 'bowl' else 530, 1100)
         if where == 'bowl':
-            return [], dots(n, 900, -150, below=True) if n == 3 else dots(1, 840, -210)
+            return [], dots(n, 900, -150 * BOWL_K, below=True) if n == 3 else dots(1, 840, -210 * BOWL_K)
         return [], dots(n, 480, DOT_BELOW, below=True)
     return marks
 
@@ -330,11 +340,13 @@ family(_hah, {
 # ع غ: a small open c on the line; in the middle of a word a closed loop
 
 def _ain_bowl(x, end):
-    return Line(x, BASE).arc(x, (BASE + DESC - 77) / 2, x - L, (BASE - DESC + 77) / 2, 90, 270).to(end, DESC - 77)
+    return Line(x, BASE).arc(x, (BASE + BOWL_DESC - 77) / 2, x - L, (BASE - BOWL_DESC + 77) / 2, 90, 270).to(end, BOWL_DESC - 77)
 
 
 def _ain_loop(cx):
-    return closed_poly([(cx - 321, TOP - 4), (cx + 322, TOP - 4), (cx, BASE)], r=[120, 150, 120])
+    # a soft heart: flat top, the sides curving in to a short round foot on the joining stroke
+    return closed_poly([(cx - 321, TOP - 4), (cx + 322, TOP - 4), (cx + 70, BASE), (cx - 70, BASE)],
+                       r=[200, 150, 150, 200])
 
 
 @forms('isol', 'init', 'medi', 'fina')
@@ -361,7 +373,7 @@ family(_ain, {
 
 def _seen_bowl(x):
     rx = (x - L) / 2
-    return Line(x, TOOTH).to(x, 200).arc(L + rx, 200, rx, 200 - DESC, 0, -180).to(L, ARM - 40)
+    return Line(x, TOOTH).to(x, 200).arc(L + rx, 200, rx, 200 - BOWL_DESC, 0, -180).to(L, ARM - 40)
 
 
 SEEN_TEETH = {'isol': [2163, 1646, 1087], 'fina': [2203, 1686, 1127],
@@ -477,7 +489,7 @@ def _qaf(form):
     cx, cy, rx, ry = 1014, 409.5, ox(315), oy(329.5)
     xs = cx + rx
     brx = (xs - L) / 2
-    bowl = Line(xs, cy).to(xs, 150).arc(L + brx, 150, brx, 150 - DESC, 0, -180).to(L, 420)
+    bowl = Line(xs, cy).to(xs, 150).arc(L + brx, 150, brx, 150 - BOWL_DESC, 0, -180).to(L, 420)
     lines = [ellipse(cx, cy, rx, ry), bowl]
     if form == 'isol':
         return 1536, lines, cx
@@ -516,18 +528,19 @@ HEH_XL, HEH_XR, HEH_TOP = 171 + HV, 1177 - HV, 824 - HH
 
 
 def _heh_dome(start):
-    """ھ: a wide dome, round on the right and square on the left; a thinner inner
-    stroke bows to the right, so the left eye is a soft D and the right one a crescent.
-    The joining stroke and the right wall are one stroke, turning on a rounded corner."""
+    """ھ: a wide dome, very round on the right and softly round on the left; a thinner
+    inner stroke leans from the top down to the lower left, so the left eye is a small
+    teardrop and the right one a wide bowl. The joining stroke and the right wall are one
+    stroke, turning on a rounded corner."""
     xl, xr, top = HEH_XL, HEH_XR, HEH_TOP
-    shoulder, corner = 480, 50
+    shoulder, corner = 440, 230
     dome = (poly([(start, BASE), (xr, BASE), (xr, top - shoulder)], r=60)
             .arc(xr - shoulder, top - shoulder, shoulder, shoulder, 0, 90)
             .to(xl + corner, top)
             .arc(xl + corner, top - corner, corner, corner, 90, 180)
             .to(xl, BASE))
-    xe = 640
-    eye = Line(xe, top, w=EYE).curve(xe + 120, top - 210, xe + 120, BASE + 210, xe, BASE)
+    xt, xb = 700, 420
+    eye = Line(xt, top, w=EYE).curve(xt - 20, top - 260, xb + 170, BASE + 120, xb, BASE)
     return [dome, eye]
 
 
@@ -566,7 +579,7 @@ FORMS['heh_doachashmee'].update(init='heh.init', medi='heh.medi')
 
 def _tail(xr, top, end_x):
     span = xr - end_x
-    return Line(xr, top).to(xr, 60).curve(xr, -320, xr - span * 0.2, DESC, end_x, DESC)
+    return Line(xr, top).to(xr, 60).curve(xr, 60 + (TAIL - 60) * 0.91, xr - span * 0.2, TAIL, end_x, TAIL)
 
 
 @forms('isol', 'fina')
@@ -631,8 +644,8 @@ family(_dal, {
 
 # ک ك گ: a < on a long base; the lower stroke sweeps into the base
 
-KAF_BACK = 520           # how far left the point of the < sits from the base's right end
-KAF_MID = 820
+KAF_BACK = 640           # how far left the point of the < sits from the base's right end
+KAF_MID = 920            # the point of the <: a wide, low < whose top stroke slopes gently
 KAF_TURN = 250           # radius of the turn from the lower stroke into the base
 
 
@@ -642,7 +655,7 @@ def _kaf_lines(xr, tail):
     y = BASE + KAF_TURN
     k = KAF_TURN * 0.5523
     line = (Line(xr - 10, KAF_TOP).to(vx, KAF_MID)
-            .curve(vx + 260, KAF_MID - 270, xr, y + 260, xr, y)
+            .curve(vx + 300, KAF_MID - 250, xr, y + 300, xr, y)
             .curve(xr, y - k, xr - KAF_TURN + k, BASE, xr - KAF_TURN, BASE))
     if len(tail) == 1:
         return [line.to(*tail[0])]
@@ -665,10 +678,13 @@ def _kaf(form):
 
 
 def _gaf_stroke(form, xr):
-    """گ: parallel stroke running above the main slanting stroke."""
-    lift = round(104 + W_V)
-    vx = xr - KAF_BACK
-    return [Line(xr - 10, KAF_TOP + lift).to(vx, KAF_MID + lift)], []
+    """گ: a thin, shorter stroke running parallel above the top stroke of the <."""
+    x0, y0, x1, y1 = xr - 10, KAF_TOP, xr - KAF_BACK, KAF_MID
+    length = math.hypot(x1 - x0, y1 - y0)
+    dx, dy = (x1 - x0) / length, (y1 - y0) / length
+    gap = HV + MARK_W / 2 + 120             # centre to centre, square to the strokes
+    sx, sy = x0 + dy * gap, y0 - dx * gap   # up and to the left of the top stroke
+    return [Line(sx, sy, w=MARK_W).to(sx + (x1 - x0) * 0.68, sy + (y1 - y0) * 0.68)], []
 
 
 family(_kaf, {
@@ -683,7 +699,7 @@ CMAP[0x0643] = 'kaf'     # the Arabic kaf shares the Kurdish shapes
 def _lam_bowl(xr):
     rx = (xr - L) / 2
     cy = 200
-    return Line(xr, ALEF_TOP).to(xr, cy).arc(L + rx, cy, rx, cy - DESC, 0, -180).to(L, ARM - 40)
+    return Line(xr, ALEF_TOP).to(xr, cy).arc(L + rx, cy, rx, cy - BOWL_DESC, 0, -180).to(L, ARM - 40)
 
 
 LAM_X = 425 - HV

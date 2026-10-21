@@ -26,7 +26,7 @@ import spacing
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(HERE, 'dist')
-VERSION = '0.200'
+VERSION = '0.300'
 UPM = 2048
 # Same line box as the font the site's layouts were tuned on, so nothing moves.
 ASC, DESC, WIN_DESC = 1955, 1040, 1000
@@ -129,13 +129,17 @@ def build(dot_style):
     for name, fn in glyphs.GLYPHS.items():
         adv, lines, dots = fn()
         is_latin = name in latin
+        if skeleton.KASHIDA and name.endswith(('.init', '.medi')):
+            adv, lines, dots = skeleton.lengthen(adv, lines, dots)
         # a dot is (x, y), or (x, y, ink width) for a solid disc of its own size (٠, •);
-        # the family's proportions move the dots but keep their size
+        # the family's proportions move the dots but keep their size. Latin letters and
+        # punctuation keep round dots whatever shape the Kurdish dots take
+        style = 'round' if is_latin and dot_style == 'soft' else dot_style
         discs = [skeleton.dot(*skeleton.place(d[0], d[1], is_latin), d[2] - 2 * skeleton.SOFT, 'round')
-                 if len(d) > 2 else skeleton.dot(*skeleton.place(d[0], d[1], is_latin), dot_size, dot_style)
+                 if len(d) > 2 else skeleton.dot(*skeleton.place(d[0], d[1], is_latin), dot_size, style)
                  for d in dots]
         path = skeleton.outline(lines, discs, adv=adv, latin=is_latin)
-        adv *= stretch * (skeleton.BODY if is_latin else 1)
+        adv *= stretch * (skeleton.LATIN if is_latin else 1)
         if skeleton.XSCALE != 1:
             path = path.transform(scaleX=skeleton.XSCALE)   # Bold is a little wider
             adv *= skeleton.XSCALE
@@ -224,7 +228,7 @@ def main():
     ap.add_argument('out', nargs='?', default=DIST)
     ap.add_argument('--family', choices=(*skeleton.FAMILIES, 'all'), default='all')
     ap.add_argument('--weight', default='all')
-    ap.add_argument('--dots', choices=('round', 'square', 'diamond'), help="override the family's dot shape")
+    ap.add_argument('--dots', choices=('round', 'soft', 'square', 'diamond'), help="override the family's dot shape")
     ap.add_argument('--install', metavar='DIR', help="also copy the .woff2 files into this folder (an app's fonts)")
     args = ap.parse_args()
     todo = [(family, weight)

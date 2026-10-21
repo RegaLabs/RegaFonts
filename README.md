@@ -12,9 +12,9 @@ Every letter in RegaFonts is drawn from code in this repository. Nothing is trac
 
 | Family | Kurdish name | Character | Best for | Weights |
 | :--- | :--- | :--- | :--- | :--- |
-| **Rega Type** | ڕێگا تایپ | Clean and even, tall letters, flat stroke ends | Body text, websites, apps, dashboards | Regular 400 · Bold 700 |
-| **Rega Aso** | ڕێگا ئاسۆ | Soft and wide: low, wide letters, round stroke ends, soft corners | Brands, social media, calm modern interfaces | Light 300 · Regular 400 · Bold 700 |
-| **Rega Payam** | ڕێگا پەیام | Soft and bold: a tall, full body, short tails, round stroke ends | Headlines, banners, posters | Regular 400 · Bold 700 |
+| **Rega Type** | ڕێگا تایپ | Clean and even: open letters on a generous body that stays clear at small sizes, flat stroke ends | Body text, websites, apps, dashboards | Regular 400 · Bold 700 |
+| **Rega Aso** | ڕێگا ئاسۆ | Modern and airy: compact letters on long, level joins, short ascenders, deep round bowls, round stroke ends | Brands, social media, calm modern interfaces | Light 300 · Regular 400 · Bold 700 |
+| **Rega Payam** | ڕێگا پەیام | Strong and compact: a big body under short ascenders, deep full bowls, soft diamond dots, round stroke ends | Headlines, banners, posters | Regular 400 · Bold 700 |
 
 ## Features
 
@@ -85,11 +85,11 @@ The letters are drawn once, as centre lines (skeletons), in `glyphs.py` (Kurdish
 
 | Family | Pen and proportions |
 | :--- | :--- |
-| Rega Type | Monoline with flat ends; verticals slightly thicker than horizontals, so the strokes look even |
-| Rega Aso | Letters 84% as tall and 12% wider, tails 80% as deep; round stroke ends and dots, very soft corners |
-| Rega Payam | Letters 110% as tall, shorter ascenders and tails, 6% narrower, heavy; round stroke ends; loops grow with the weight so counters stay open |
+| Rega Type | Monoline with flat ends; verticals slightly thicker than horizontals, so the strokes look even; the body 4% taller and the letters 3% narrower than the drawing |
+| Rega Aso | Body 87% as tall under short ascenders; every join to the next letter 150 units longer; deep round bowls (ن ق ل س); round stroke ends and dots, very soft corners |
+| Rega Payam | Body 114% as tall, ascenders much shorter, 5% narrower, heavy; deep bowls and short tails; soft diamond dots; round stroke ends; loops grow with the weight so counters stay open |
 
-Proportions and width move the centre lines *before* they are stroked, so every stroke keeps an even weight. Round stroke ends stay flat wherever a stroke joins the next letter, so joins never pinch. `spacing.py` measures the finished outlines to place vowel marks and work out kerning, and `build.py` compiles everything into hinted TrueType and WOFF2.
+Proportions, width and joins move the centre lines *before* they are stroked, so every stroke keeps an even weight. Each family also sets its own depth for the round bowls and tails (`shape` in `skeleton.py`). Round stroke ends stay flat wherever a stroke joins the next letter, so joins never pinch. `spacing.py` measures the finished outlines to place vowel marks and work out kerning, and `build.py` compiles everything into hinted TrueType and WOFF2.
 
 ### Building from source
 
@@ -141,8 +141,8 @@ RegaFonts/
 فۆنتەکانی ڕێگا کۆمەڵێک فۆنتی ڕەسەنی ڕێگالابسن بۆ کوردی (سۆرانی)، عەرەبی و لاتینی. هەموو پیتێک لەم کۆدەوە دروستکراوە و هیچ پیتێک لە فۆنتێکی ترەوە وەرنەگیراوە.
 
 - **ڕێگا تایپ**: ڕوون و ڕێک، بۆ دەق، ماڵپەڕ و ئەپ
-- **ڕێگا ئاسۆ**: نەرم و پان، بۆ براند و سۆشیال میدیا
-- **ڕێگا پەیام**: نەرم و قورس، بۆ سەردێڕ، بانەر و پۆستەر
+- **ڕێگا ئاسۆ**: مۆدێرن و کراوە، بۆ براند، ئەپ و سۆشیال میدیا
+- **ڕێگا پەیام**: قورس و پتەو، بۆ سەردێڕ، بانەر و پۆستەر
 
 هەموو پیتە کوردییەکان بە هەموو شێوەکانی لکاندنەوە، ژمارەی کوردی و ئینگلیزی، و پیتی لاتینی تێدایە.
 

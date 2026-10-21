@@ -3,9 +3,9 @@
 Every letter is drawn once, as centre lines (skeletons). Each family then
 writes those skeletons with its own pen and proportions:
 
-  - Rega Type:  tall teeth, flat ends (the text face);
-  - Rega Aso:   low and wide, round ends, very soft corners (calm, modern);
-  - Rega Payam: a tall body, short tails, heavy, round ends (soft headlines).
+  - Rega Type:  open letters on a generous body, flat ends (the text face);
+  - Rega Aso:   compact letters on long level joins, deep round bowls, round ends (modern, airy);
+  - Rega Payam: a big body under short ascenders, deep bowls, heavy, soft diamond dots (headlines).
 
 All shapes are built here from points, lines, rounded corners and ellipse
 arcs; nothing is traced from another font.
@@ -32,33 +32,40 @@ SOFT = 16          # corner softening: strokes are drawn this much thinner, then
 #   lean:    degrees the letters lean the way they are written (Kurdish tops to the left, Latin to the right)
 #   corner:  scales the radius of every rounded corner
 #   grow:    share of the extra weight by which loops grow outward (0: the inside takes it all)
+#   latin:   Latin letters and digits are scaled by this (default: with the body)
+#   kashida: every join to the next letter is this much longer (long, level joins)
+#   shape:   the family's own letter shapes (see glyphs.py: bowl, noon, yeh, meem)
 #   XSCALE:  the finished letter is widened by this much (the strokes widen with it)
 # Proportions, width and lean move the skeleton before it is stroked, so strokes stay even.
 FAMILIES = {
-    # tall teeth, flat ends: the text face
-    'Rega Type': dict(dots='round', weights={
-        'Regular': dict(W_V=174, W_H=168, MARK=116, EYE=124, DOT=217, DOT_GAP=266, DOT_STACK=246,
+    # the text face: clean and even, open counters, a generous body that stays clear at small
+    # sizes, slightly narrow so lines hold as many words; flat ends
+    'Rega Type': dict(dots='round', body=1.04, ascend=0.95, descend=1.04, stretch=0.97, latin=1.0, weights={
+        'Regular': dict(W_V=178, W_H=164, MARK=118, EYE=124, DOT=224, DOT_GAP=272, DOT_STACK=250,
                         XSCALE=1.0, CLASS=400),
-        'Bold': dict(W_V=262, W_H=240, MARK=168, EYE=172, DOT=292, DOT_GAP=338, DOT_STACK=310,
+        'Bold': dict(W_V=270, W_H=244, MARK=170, EYE=172, DOT=298, DOT_GAP=344, DOT_STACK=316,
                      XSCALE=1.04, CLASS=700),
     }),
-    # soft and wide: low teeth, wide letters, shallow tails, very round corners, round ends
-    'Rega Aso': dict(dots='round', cap='round', body=0.84, descend=0.8, stretch=1.12, corner=1.6, weights={
-        'Light': dict(W_V=112, W_H=112, MARK=92, EYE=96, DOT=190, DOT_GAP=240, DOT_STACK=225,
+    # modern and geometric: compact letters on long, level joins, a low body under short
+    # ascenders, deep round bowls, very round corners and round ends
+    'Rega Aso': dict(dots='round', cap='round', body=0.87, ascend=0.7, stretch=1.03, kashida=150, corner=1.6,
+                     latin=0.92, shape=dict(bowl=1.12, noon=-430, yeh=-340, meem=-520, tail=-400), weights={
+        'Light': dict(W_V=108, W_H=104, MARK=90, EYE=94, DOT=188, DOT_GAP=238, DOT_STACK=222,
                       XSCALE=1.0, CLASS=300),
-        'Regular': dict(W_V=160, W_H=160, MARK=112, EYE=120, DOT=212, DOT_GAP=262, DOT_STACK=242,
+        'Regular': dict(W_V=156, W_H=150, MARK=110, EYE=118, DOT=210, DOT_GAP=260, DOT_STACK=240,
                         XSCALE=1.0, CLASS=400),
-        'Bold': dict(W_V=240, W_H=232, MARK=156, EYE=162, DOT=280, DOT_GAP=328, DOT_STACK=300,
+        'Bold': dict(W_V=238, W_H=226, MARK=154, EYE=160, DOT=280, DOT_GAP=328, DOT_STACK=300,
                      XSCALE=1.0, CLASS=700),
     }),
-    # soft and bold: a tall body, short ascenders and tails, compact and heavy, round ends;
-    # loops grow so the counters stay open
-    'Rega Payam': dict(dots='round', cap='round', body=1.1, ascend=0.8, descend=0.78, stretch=0.94,
-                       corner=1.4, grow=0.5, weights={
-        'Regular': dict(W_V=220, W_H=214, MARK=146, EYE=150, DOT=266, DOT_GAP=316, DOT_STACK=296,
-                        XSCALE=1.03, CLASS=400),
-        'Bold': dict(W_V=310, W_H=300, MARK=196, EYE=196, DOT=340, DOT_GAP=392, DOT_STACK=360,
-                     XSCALE=1.07, CLASS=700),
+    # the headline face: a big body under short ascenders, deep full bowls, compact and heavy,
+    # verticals a little stronger than the joins, soft diamond dots, round ends; loops grow so
+    # the counters stay open
+    'Rega Payam': dict(dots='soft', cap='round', body=1.14, ascend=0.3, stretch=0.95, corner=1.4, grow=0.5,
+                       latin=1.04, shape=dict(bowl=1.08, noon=-420, yeh=-440, meem=-580, tail=-380), weights={
+        'Regular': dict(W_V=252, W_H=220, MARK=160, EYE=162, DOT=282, DOT_GAP=334, DOT_STACK=312,
+                        XSCALE=1.02, CLASS=400),
+        'Bold': dict(W_V=322, W_H=288, MARK=204, EYE=200, DOT=350, DOT_GAP=404, DOT_STACK=372,
+                     XSCALE=1.06, CLASS=700),
     }),
 }
 # heights in the drawing (Rega Type): the top of the teeth, where ascenders rise above the dots,
@@ -69,7 +76,7 @@ _REG = FAMILIES['Rega Type']['weights']['Regular']
 
 def set_style(family, weight):
     """Choose the family and pen. Call before glyphs.py is imported: its constants are built from these."""
-    global FAMILY, WEIGHT, DOTS, CAP, GROW, STRETCH, CORNER, BODY, ASCEND, DESCEND, LEAN, \
+    global FAMILY, WEIGHT, DOTS, CAP, GROW, STRETCH, CORNER, BODY, ASCEND, DESCEND, LEAN, LATIN, SHAPE, KASHIDA, \
         RESHAPE, W_V, W_H, W, BASE, MARK, EYE, DOT, DOT_GAP, DOT_STACK, XSCALE, CLASS, _K
     FAMILY, WEIGHT = family, weight
     f = FAMILIES[family]
@@ -77,7 +84,8 @@ def set_style(family, weight):
     DOTS, CAP, GROW = f['dots'], f.get('cap', 'butt'), f.get('grow', 0)
     STRETCH, CORNER = f.get('stretch', 1.0), f.get('corner', 1.0)
     BODY, ASCEND, DESCEND, LEAN = f.get('body', 1.0), f.get('ascend', 1.0), f.get('descend', 1.0), f.get('lean', 0)
-    RESHAPE = (STRETCH, BODY, ASCEND, DESCEND, LEAN) != (1.0, 1.0, 1.0, 1.0, 0)
+    LATIN, SHAPE, KASHIDA = f.get('latin', BODY), f.get('shape', {}), f.get('kashida', 0)
+    RESHAPE = (STRETCH, BODY, ASCEND, DESCEND, LEAN, LATIN) != (1.0, 1.0, 1.0, 1.0, 0, 1.0)
     W_V, W_H, MARK, EYE, DOT = p['W_V'], p['W_H'], p['MARK'], p['EYE'], p['DOT']
     DOT_GAP, DOT_STACK, XSCALE, CLASS = p['DOT_GAP'], p['DOT_STACK'], p['XSCALE'], p['CLASS']
     W = W_V
@@ -104,11 +112,12 @@ def oy(r):
 def place(x, y, latin=False):
     """Where a point of the drawing lands in this family: its proportions, width and lean.
 
-    Latin keeps its own proportions and is scaled with the body, so its x-height stays
-    in step with the Kurdish teeth; it leans the other way, the way Latin is written.
+    Latin keeps its own proportions and is scaled by LATIN (with the body, unless the family
+    says otherwise), so its x-height stays in step with the Kurdish teeth; it leans the
+    other way, the way Latin is written.
     """
     if latin:
-        x, y = x * BODY, y * BODY
+        x, y = x * LATIN, y * LATIN
     else:
         y = _height(y)
     # lean around the middle of the body, so a letter stays centred in its width
@@ -133,6 +142,15 @@ def _height(y):
     if y <= STEM:
         return rise + (y - RISE) * ASCEND
     return rise + (STEM - RISE) * ASCEND + y - STEM
+
+
+def lengthen(adv, lines, dots):
+    """A longer join to the next letter (KASHIDA): the letter moves right and a level stroke
+    fills the room it leaves on the left, so it still joins at the same place."""
+    for line in lines:
+        line.path = line.path.transform(translateX=KASHIDA)
+    lines.append(Line(KASHIDA, BASE).to(-OV, BASE))
+    return adv + KASHIDA, lines, [(d[0] + KASHIDA, *d[1:]) for d in dots]
 
 
 def _placed(path, latin):
@@ -255,8 +273,23 @@ def _unit(p, q):
 
 
 def dot(cx, cy, size, style):
-    """One dot (nuqta) of the given ink width: 'round', 'diamond' (the Hambana emblem) or 'square'."""
+    """One dot (nuqta) of the given ink width: 'round', 'soft' (a diamond with round corners),
+    'diamond' (sharp, the Hambana emblem) or 'square'."""
     p = pathops.Path()
+    if style == 'soft':
+        # a rhombus a little taller than wide, its corners rounded; about as much ink as the round dot
+        hx, hy = size / 2 * 1.16, size / 2 * 1.30
+        pts = [(cx, cy - hy), (cx + hx, cy), (cx, cy + hy), (cx - hx, cy)]
+        lerp = lambda a, b, t: (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+        for i, corner in enumerate(pts):
+            a, b = lerp(corner, pts[i - 1], 0.3), lerp(corner, pts[(i + 1) % 4], 0.3)
+            if i == 0:
+                p.moveTo(*a)
+            else:
+                p.lineTo(*a)
+            p.cubicTo(*lerp(a, corner, 0.6), *lerp(b, corner, 0.6), *b)
+        p.close()
+        return p
     if style == 'diamond':
         h = size / 2 * 1.25  # same ink as the round dot
         p.moveTo(cx, cy - h)
